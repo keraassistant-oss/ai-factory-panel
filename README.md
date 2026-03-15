@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Factory Panel
 
-## Getting Started
+Веб-панель для управления AI-разработкой проектов.
 
-First, run the development server:
+## Стек
+
+- **Framework:** Next.js 14 (App Router)
+- **UI:** Tailwind CSS + shadcn/ui
+- **ORM:** Prisma
+- **БД:** PostgreSQL
+- **Auth:** NextAuth.js
+- **Язык:** TypeScript
+
+## Воронка разработки
+
+```
+INTAKE → DECOMPOSITION → DESIGN → ARCHITECTURE → DEV → QA → DELIVERY
+```
+
+## Установка и запуск
+
+### 1. Клонирование
+
+```bash
+git clone https://github.com/keraassistant-oss/ai-factory-panel.git
+cd ai-factory-panel
+```
+
+### 2. Установка зависимостей
+
+```bash
+npm install
+```
+
+### 3. Запуск PostgreSQL
+
+```bash
+docker-compose up -d
+```
+
+### 4. Настройка переменных окружения
+
+```bash
+cp .env.example .env
+# Или используйте существующий .env
+```
+
+### 5. Миграции базы данных
+
+```bash
+npx prisma migrate dev --name init
+```
+
+### 6. Запуск dev-сервера
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Откройте http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Данные для входа
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Email:** `admin@factory.ai`
+- **Password:** `admin123`
 
-## Learn More
+## Структура проекта
 
-To learn more about Next.js, take a look at the following resources:
+```
+├── app/                    # Next.js App Router
+│   ├── api/               # API routes
+│   ├── login/             # Страница входа
+│   ├── projects/          # Страницы проектов
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx           # Главная (список проектов)
+├── components/            # React компоненты
+│   ├── ui/               # shadcn/ui компоненты
+│   ├── artifacts.tsx     # Компонент артефактов
+│   ├── header.tsx        # Шапка
+│   ├── pipeline.tsx      # Визуальная воронка
+│   └── stage-actions.tsx # Действия с этапами
+├── lib/                   # Утилиты
+│   ├── prisma.ts         # Prisma клиент
+│   └── types.ts          # TypeScript типы
+├── prisma/
+│   └── schema.prisma     # Схема БД
+└── docker-compose.yml    # PostgreSQL контейнер
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Команды
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Команда | Описание |
+|---------|----------|
+| `npm run dev` | Запуск dev-сервера |
+| `npm run build` | Сборка для production |
+| `npm run start` | Запуск production-сервера |
+| `npx prisma studio` | Открыть Prisma Studio |
+| `npx prisma migrate dev` | Применить миграции |
 
-## Deploy on Vercel
+## Лицензия
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
