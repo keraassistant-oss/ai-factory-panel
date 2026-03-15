@@ -3,6 +3,12 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { prisma } from '@/lib/prisma'
 import { Stage, StageStatus } from '@/lib/types'
+import {
+  sendTelegramMessage,
+  formatStageApprovedMessage,
+  formatStageRejectedMessage,
+  getNextStageLabel,
+} from '@/lib/telegram'
 
 export async function PATCH(
   req: NextRequest,
@@ -25,6 +31,15 @@ export async function PATCH(
     }
   }
   if (comment !== undefined) updateData.comment = comment
+
+  // Get project info for notifications
+  const project = await prisma.project.findUnique({
+    where: { id },
+  })
+
+  if (!project) {
+    return NextResponse.json({ error: 'Project not found' }, { status: 404 })
+  }
 
   const stage = await prisma.projectStage.update({
     where: {
@@ -58,6 +73,27 @@ export async function PATCH(
         data: { status: 'COMPLETED' },
       })
     }
+
+    // Send Telegram notification for approval
+    const nextStageLabel = getNextStageLabel(stage.stage as Stage)
+    const approvalMessage = formatStageApprovedMessage(
+      project.name,
+      stage.stage as Stage,
+      id,
+      nextStageLabel
+    )
+    await sendTelegramMessage(approvalMessage)
+  }
+
+  // If rejected, send Telegram notification
+  if (status === 'REJECTED') {
+    const rejectionMessage = formatStageRejectedMessage(
+      project.name,
+      stage.stage as Stage,
+      id,
+      comment
+    )
+    await sendTelegramMessage(rejectionMessage)
   }
 
   return NextResponse.json(stage)

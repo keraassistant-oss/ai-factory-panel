@@ -56,7 +56,6 @@ export default async function HomePage() {
                           href={project.githubUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
                           className="text-zinc-500 hover:text-zinc-300 transition-colors"
                           title="Открыть на GitHub"
                         >
