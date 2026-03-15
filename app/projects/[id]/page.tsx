@@ -10,7 +10,7 @@ import { Pipeline } from '@/components/pipeline'
 import { StageActions } from '@/components/stage-actions'
 import { Artifacts } from '@/components/artifacts'
 import { ProjectWithStages, STAGE_LABELS, STATUS_LABELS, STAGES } from '@/lib/types'
-import { ArrowLeft, Clock, CheckCircle, XCircle } from 'lucide-react'
+import { ArrowLeft, Clock, CheckCircle, XCircle, Github, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 
 export default function ProjectPage() {
@@ -124,6 +124,40 @@ export default function ProjectPage() {
                 <div className="p-4 border border-red-800/50 rounded-lg bg-red-950/20">
                   <p className="text-sm text-red-400 font-medium">Причина отклонения:</p>
                   <p className="text-sm text-zinc-300 mt-1">{currentStageData.comment}</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="border-zinc-800 bg-zinc-900">
+            <CardHeader>
+              <CardTitle className="text-lg text-zinc-100 flex items-center gap-2">
+                <Github className="w-5 h-5" />
+                Репозиторий
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {project.githubUrl ? (
+                <div className="space-y-3">
+                  <p className="text-sm text-zinc-400">
+                    Репозиторий: <span className="text-zinc-200 font-mono">{project.githubRepo}</span>
+                  </p>
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button variant="outline" className="border-zinc-700 hover:bg-zinc-800">
+                      <Github className="w-4 h-4 mr-2" />
+                      Открыть на GitHub
+                      <ExternalLink className="w-3 h-3 ml-2" />
+                    </Button>
+                  </a>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 text-zinc-500">
+                  <div className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" />
+                  <p>Репозиторий создаётся...</p>
                 </div>
               )}
             </CardContent>

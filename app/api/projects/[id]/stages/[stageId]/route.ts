@@ -45,7 +45,7 @@ export async function PATCH(
       'QA',
       'DELIVERY',
     ]
-    const currentIndex = stages.indexOf(stage.stage)
+    const currentIndex = stages.indexOf(stage.stage as Stage)
     if (currentIndex < stages.length - 1) {
       await prisma.project.update({
         where: { id },

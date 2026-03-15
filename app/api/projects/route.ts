@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { prisma } from '@/lib/prisma'
 import { STAGES } from '@/lib/types'
+import { createGithubRepo } from '@/lib/github'
 
 export async function GET() {
   const session = await getServerSession(authOptions)
@@ -35,11 +36,28 @@ export async function POST(req: NextRequest) {
   const body = await req.json()
   const { name, description, tzContent } = body
 
+  // Create GitHub repository first (don't fail if it doesn't work)
+  let githubRepo: string | null = null
+  let githubUrl: string | null = null
+  
+  try {
+    const repoResult = await createGithubRepo(name, description)
+    if (repoResult) {
+      githubRepo = repoResult.repoName
+      githubUrl = repoResult.repoUrl
+    }
+  } catch (error) {
+    console.error('Failed to create GitHub repo:', error)
+    // Continue without GitHub repo
+  }
+
   const project = await prisma.project.create({
     data: {
       name,
       description,
       tzContent,
+      githubRepo,
+      githubUrl,
     },
   })
 

@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
-import { Plus, ArrowRight } from 'lucide-react'
-import { STAGE_LABELS, STATUS_LABELS } from '@/lib/types'
+import { Plus, ArrowRight, Github } from 'lucide-react'
+import { STAGE_LABELS, STATUS_LABELS, Stage, Status } from '@/lib/types'
 
 export default async function HomePage() {
   const session = await getServerSession(authOptions)
@@ -50,18 +50,32 @@ export default async function HomePage() {
                     <CardTitle className="text-lg text-zinc-100 group-hover:text-purple-400 transition-colors">
                       {project.name}
                     </CardTitle>
-                    <Badge
-                      variant={project.status === 'ACTIVE' ? 'default' : 'secondary'}
-                      className={
-                        project.status === 'ACTIVE'
-                          ? 'bg-green-600/20 text-green-400 border-green-600/30'
-                          : project.status === 'COMPLETED'
-                          ? 'bg-blue-600/20 text-blue-400 border-blue-600/30'
-                          : 'bg-yellow-600/20 text-yellow-400 border-yellow-600/30'
-                      }
-                    >
-                      {STATUS_LABELS[project.status]}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      {project.githubUrl && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-zinc-500 hover:text-zinc-300 transition-colors"
+                          title="Открыть на GitHub"
+                        >
+                          <Github className="w-4 h-4" />
+                        </a>
+                      )}
+                      <Badge
+                        variant={project.status === 'ACTIVE' ? 'default' : 'secondary'}
+                        className={
+                          project.status === 'ACTIVE'
+                            ? 'bg-green-600/20 text-green-400 border-green-600/30'
+                            : project.status === 'COMPLETED'
+                            ? 'bg-blue-600/20 text-blue-400 border-blue-600/30'
+                            : 'bg-yellow-600/20 text-yellow-400 border-yellow-600/30'
+                        }
+                      >
+                        {STATUS_LABELS[project.status as Status]}
+                      </Badge>
+                    </div>
                   </div>
                   <CardDescription className="text-zinc-500 mt-2 line-clamp-2">
                     {project.description || 'Нет описания'}
@@ -72,7 +86,7 @@ export default async function HomePage() {
                     <div className="flex items-center gap-2">
                       <span className="text-zinc-500">Этап:</span>
                       <span className="text-purple-400">
-                        {STAGE_LABELS[project.currentStage]}
+                        {STAGE_LABELS[project.currentStage as Stage]}
                       </span>
                     </div>
                     <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:text-purple-400 transition-colors" />

@@ -1,6 +1,17 @@
-import { Stage, Status, StageStatus, ArtifactType } from '@prisma/client'
+// Types for the AI Factory Panel
 
-export type { Stage, Status, StageStatus, ArtifactType }
+export type Stage = 
+  | 'INTAKE'
+  | 'DECOMPOSITION'
+  | 'DESIGN'
+  | 'ARCHITECTURE'
+  | 'DEV'
+  | 'QA'
+  | 'DELIVERY'
+
+export type Status = 'ACTIVE' | 'COMPLETED' | 'PAUSED'
+
+export type StageStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
 
 export interface ProjectWithStages {
   id: string
@@ -9,6 +20,8 @@ export interface ProjectWithStages {
   tzContent: string | null
   currentStage: Stage
   status: Status
+  githubRepo: string | null
+  githubUrl: string | null
   createdAt: Date
   updatedAt: Date
   stages: ProjectStageWithArtifacts[]
@@ -28,7 +41,7 @@ export interface ProjectStageWithArtifacts {
 export interface Artifact {
   id: string
   stageId: string
-  type: ArtifactType
+  type: string
   content: string | null
   url: string | null
   createdAt: Date

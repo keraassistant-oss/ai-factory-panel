@@ -4,8 +4,10 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Artifact, ArtifactType } from '@/lib/types'
+import { Artifact } from '@/lib/types'
 import { Plus, Link, FileText, X } from 'lucide-react'
+
+type ArtifactType = 'TEXT' | 'URL'
 
 interface ArtifactsProps {
   stageId: string
