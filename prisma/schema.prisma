@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id           String         @id @default(cuid())
+  name         String
+  description  String?
+  tzContent    String?
+  currentStage Stage          @default(INTAKE)
+  status       Status         @default(ACTIVE)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  stages       ProjectStage[]
+}
+
+model ProjectStage {
+  id         String      @id @default(cuid())
+  projectId  String
+  stage      Stage
+  status     StageStatus @default(PENDING)
+  comment    String?
+  approvedAt DateTime?
+  createdAt  DateTime    @default(now())
+  project    Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  artifacts  Artifact[]
+
+  @@unique([projectId, stage])
+}
+
+model Artifact {
+  id        String       @id @default(cuid())
+  stageId   String
+  type      ArtifactType
+  content   String?
+  url       String?
+  createdAt DateTime     @default(now())
+  stage     ProjectStage @relation(fields: [stageId], references: [id], onDelete: Cascade)
+}
+
+enum Stage {
+  INTAKE
+  DECOMPOSITION
+  DESIGN
+  ARCHITECTURE
+  DEV
+  QA
+  DELIVERY
+}
+
+enum Status {
+  ACTIVE
+  COMPLETED
+  PAUSED
+}
+
+enum StageStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ArtifactType {
+  TEXT
+  URL
+}
